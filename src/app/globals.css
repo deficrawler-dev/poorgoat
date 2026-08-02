@@ -2935,3 +2935,13 @@ body {
     min-width: 820px;
   }
 }
+
+/* Clean mobile header */
+@media (max-width: 760px) {
+  .pg-header {
+    background-color: transparent !important;
+    background-image: none !important;
+    border-bottom: 0 !important;
+    box-shadow: none !important;
+  }
+}
