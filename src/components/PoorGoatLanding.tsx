@@ -14,6 +14,8 @@ import {
   Share2,
   ShieldCheck,
   Wallet,
+  Menu,
+  X,
 } from "lucide-react";
 import { toBlob } from "html-to-image";
 import Image from "next/image";
@@ -428,8 +430,13 @@ export function PoorGoatLanding({
 
   return (
     <main className="pg-site" id="top">
-<header className="pg-header page-width">
-        <a className="wordmark" href="#top" aria-label="PoorGoat home">
+      <header className="pg-header page-width">
+        <a
+          className="wordmark"
+          href="#top"
+          aria-label="PoorGoat home"
+          onClick={() => setMobileMenuOpen(false)}
+        >
           <Image
             src="/images/brand/logo.webp"
             alt="PoorGoat"
@@ -449,6 +456,48 @@ export function PoorGoatLanding({
         <a className="header-cta" href="#goatscore">
           Check score <ArrowRight size={15} />
         </a>
+
+        <button
+          className="mobile-menu-trigger"
+          type="button"
+          aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={mobileMenuOpen}
+          aria-controls="mobile-navigation"
+          onClick={() => setMobileMenuOpen((open) => !open)}
+        >
+          {mobileMenuOpen ? (
+            <X size={29} strokeWidth={1.8} />
+          ) : (
+            <Menu size={31} strokeWidth={1.8} />
+          )}
+        </button>
+
+        <nav
+          id="mobile-navigation"
+          className={`mobile-navigation ${mobileMenuOpen ? "is-open" : ""}`}
+          aria-label="Mobile navigation"
+        >
+          <a href="#market" onClick={() => setMobileMenuOpen(false)}>
+            Market
+          </a>
+
+          <a href="#goatscore" onClick={() => setMobileMenuOpen(false)}>
+            GoatScore
+          </a>
+
+          <a href="#method" onClick={() => setMobileMenuOpen(false)}>
+            Method
+          </a>
+
+          <a
+            className="mobile-score-link"
+            href="#goatscore"
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            Check my GoatScore
+            <ArrowRight size={16} />
+          </a>
+        </nav>
       </header>
 
       <section className="hero page-width">
