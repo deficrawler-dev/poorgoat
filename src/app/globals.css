@@ -2945,3 +2945,9 @@ body {
     box-shadow: none !important;
   }
 }
+/* Mobile header-to-hero spacing */
+@media (max-width: 760px) {
+  .pg-header + .hero {
+    margin-top: 14px !important;
+  }
+}
