@@ -428,13 +428,7 @@ export function PoorGoatLanding({
 
   return (
     <main className="pg-site" id="top">
-      <div className="top-tape">
-        <span>POORGOAT TERMINAL</span>
-        <span>PUBLIC ON-CHAIN DATA</span>
-        <span>$ANSEM 75 / $POORGOAT 25</span>
-      </div>
-
-      <header className="pg-header page-width">
+<header className="pg-header page-width">
         <a className="wordmark" href="#top" aria-label="PoorGoat home">
           <Image
             src="/images/brand/logo.webp"
