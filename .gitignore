@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+/backups/
+/apply-*.ps1
+/*.zip
+/cracked-black-texture.webp
+/scripts/apply-*.mjs

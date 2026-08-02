@@ -28,6 +28,8 @@ import {
   useState,
 } from "react";
 
+import { LivePoorGoatActivity } from "@/components/LivePoorGoatActivity";
+import { PoorGoatMarketTerminal } from "@/components/PoorGoatMarketTerminal";
 import type { GoatScoreResult, TokenScoreSummary } from "@/lib/goatscore/types";
 import { SITE, TOKENS } from "@/lib/constants";
 
@@ -54,7 +56,6 @@ type AnalysisState = "idle" | "loading" | "success" | "error";
 
 const SOLANA_ADDRESS_PATTERN = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
 const X_USERNAME_PATTERN = /^[A-Za-z0-9_]{1,15}$/;
-const DEX_EMBED_URL = `${TOKENS.poorGoat.dexUrl}?embed=1&info=0&theme=dark&trades=0`;
 
 function formatMoney(value: number | null) {
   if (value === null || !Number.isFinite(value)) return "—";
@@ -187,11 +188,13 @@ function TokenResultPanel({ summary }: { summary: TokenScoreSummary }) {
   );
 }
 
+
 export function PoorGoatLanding({
   initialWallet = "",
   initialXUsername = "",
   autoAnalyse = false,
 }: PoorGoatLandingProps) {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [market, setMarket] = useState<MarketData | null>(null);
   const [marketLoading, setMarketLoading] = useState(true);
   const [marketError, setMarketError] = useState("");
@@ -228,7 +231,7 @@ export function PoorGoatLanding({
     }
 
     void loadMarket();
-    const interval = window.setInterval(() => void loadMarket(), 30_000);
+    const interval = window.setInterval(() => void loadMarket(), 15_000);
 
     return () => {
       active = false;
@@ -448,13 +451,19 @@ export function PoorGoatLanding({
         </a>
 
         <nav className="main-nav" aria-label="Main navigation">
-          <a href="#market">Market</a>
-          <a href="#goatscore">GoatScore</a>
-          <a href="#method">Method</a>
+          <a href="#goatscore">Check Score</a>
+          <a href="#market">Terminal</a>
+          <a href="#flywheel">Flywheel</a>
+          <a href="#activity">Activity</a>
         </nav>
 
-        <a className="header-cta" href="#goatscore">
-          Check score <ArrowRight size={15} />
+        <a
+          className="header-cta"
+          href={TOKENS.poorGoat.dexUrl}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Buy $POORGOAT <ArrowRight size={15} />
         </a>
 
         <button
@@ -477,39 +486,89 @@ export function PoorGoatLanding({
           className={`mobile-navigation ${mobileMenuOpen ? "is-open" : ""}`}
           aria-label="Mobile navigation"
         >
-          <a href="#market" onClick={() => setMobileMenuOpen(false)}>
-            Market
-          </a>
+          <div className="mobile-nav-heading">
+            <div>
+              <span>MISSION NAVIGATION</span>
+              <strong>Where to, explorer?</strong>
+            </div>
+            <span className="mobile-live-pill">
+              <i />
+              SOL LIVE
+            </span>
+          </div>
 
-          <a href="#goatscore" onClick={() => setMobileMenuOpen(false)}>
-            GoatScore
-          </a>
+          <div className="mobile-nav-links">
+            <a href="#goatscore" onClick={() => setMobileMenuOpen(false)}>
+              <span>01</span>
+              <div>
+                <strong>CHECK SCORE</strong>
+                <small>Analyse $ANSEM conviction</small>
+              </div>
+              <ArrowRight size={15} />
+            </a>
 
-          <a href="#method" onClick={() => setMobileMenuOpen(false)}>
-            Method
-          </a>
+            <a href="#market" onClick={() => setMobileMenuOpen(false)}>
+              <span>02</span>
+              <div>
+                <strong>TERMINAL</strong>
+                <small>Price, liquidity and chart</small>
+              </div>
+              <ArrowRight size={15} />
+            </a>
 
-          <a
-            className="mobile-score-link"
-            href="#goatscore"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            Check my GoatScore
-            <ArrowRight size={16} />
-          </a>
+            <a href="#flywheel" onClick={() => setMobileMenuOpen(false)}>
+              <span>03</span>
+              <div>
+                <strong>FLYWHEEL</strong>
+                <small>How $POORGOAT rewards holders</small>
+              </div>
+              <ArrowRight size={15} />
+            </a>
+
+            <a href="#activity" onClick={() => setMobileMenuOpen(false)}>
+              <span>04</span>
+              <div>
+                <strong>ACTIVITY</strong>
+                <small>Buys, sells and transfers</small>
+              </div>
+              <ArrowRight size={15} />
+            </a>
+          </div>
+
+          <div className="mobile-nav-actions">
+            <a
+              href="#goatscore"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Check Score
+            </a>
+            <a
+              href={TOKENS.poorGoat.dexUrl}
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Buy $POORGOAT <ArrowRight size={14} />
+            </a>
+          </div>
+
+          <p className="mobile-nav-footnote">
+            VERIFIED ON SOLANA Â· POORGOAT.FUN
+          </p>
         </nav>
       </header>
 
       <section className="hero page-width">
         <div className="hero-copy">
-          <p className="section-label">BUILT AROUND THE $ANSEM FLYWHEEL</p>
+          <p className="section-label">THE $ANSEM HOLDER REWARD FLYWHEEL</p>
           <h1>
             TRACK THE GOAT.
             <span>PROVE YOUR CONVICTION.</span>
           </h1>
-          <p className="hero-intro">
-            A live $POORGOAT market terminal and an on-chain score for the
-            people who held, accumulated and stayed in the trenches.
+                    <p className="hero-intro">
+            $POORGOAT rewards the $ANSEM holders who hold with conviction and
+            bagwork for the ecosystem. GoatScore verifies the on-chain side of
+            that journey.
           </p>
 
           <div className="hero-actions">
@@ -524,11 +583,11 @@ export function PoorGoatLanding({
           <div className="hero-proof">
             <div>
               <strong>75</strong>
-              <span>$ANSEM points</span>
+              <span>$ANSEM conviction</span>
             </div>
             <div>
               <strong>25</strong>
-              <span>$POORGOAT points</span>
+              <span>$POORGOAT reward signal</span>
             </div>
             <div>
               <strong>0</strong>
@@ -549,113 +608,6 @@ export function PoorGoatLanding({
         </div>
       </section>
 
-      <section className="market-section page-width" id="market">
-        <div className="section-title-row">
-          <div>
-            <p className="section-label">LIVE MARKET INTELLIGENCE</p>
-            <h2>
-              THE POORGOAT
-              <br />
-              TERMINAL.
-            </h2>
-          </div>
-          <p className="section-copy">
-            Price, liquidity, volume and trading activity in one restrained,
-            real-time view.
-          </p>
-        </div>
-
-        <div className="market-terminal">
-          <div className="terminal-bar">
-            <div className="token-identity">
-              <span className="token-avatar">PG</span>
-              <div>
-                <strong>$POORGOAT / SOL</strong>
-                <span>Solana · Live pair</span>
-              </div>
-            </div>
-
-            <div className={`change-pill ${isPositive ? "positive" : "negative"}`}>
-              {change === null
-                ? "—"
-                : `${isPositive ? "+" : ""}${change.toFixed(2)}%`}
-              <span>24H</span>
-            </div>
-          </div>
-
-          <div className="terminal-body">
-            <aside className="market-sidebar">
-              <p className="data-label">POORGOAT PRICE</p>
-              <strong className="market-price">
-                {marketLoading ? "LOADING" : formatPrice(market?.priceUsd ?? null)}
-              </strong>
-              <span className="pair-caption">Live USD price via Dexscreener</span>
-
-              <div className="market-stats">
-                <div>
-                  <span>Market cap</span>
-                  <strong>{marketLoading ? "—" : formatMoney(market?.marketCap ?? null)}</strong>
-                </div>
-                <div>
-                  <span>Liquidity</span>
-                  <strong>{marketLoading ? "—" : formatMoney(market?.liquidity ?? null)}</strong>
-                </div>
-                <div>
-                  <span>24H volume</span>
-                  <strong>{marketLoading ? "—" : formatMoney(market?.volume24h ?? null)}</strong>
-                </div>
-                <div>
-                  <span>24H trades</span>
-                  <strong>
-                    {marketLoading
-                      ? "—"
-                      : formatCount((market?.buys24h ?? 0) + (market?.sells24h ?? 0))}
-                  </strong>
-                </div>
-              </div>
-
-              <div className="trade-split">
-                <div>
-                  <span>Buys</span>
-                  <strong>{formatCount(market?.buys24h ?? null)}</strong>
-                </div>
-                <div>
-                  <span>Sells</span>
-                  <strong>{formatCount(market?.sells24h ?? null)}</strong>
-                </div>
-              </div>
-            </aside>
-
-            <div className="chart-shell">
-              <div className="chart-toolbar">
-                <span className={marketError ? "status-dot error" : "status-dot"} />
-                <span>{marketLoading ? "Connecting to feed" : marketError || updatedLabel}</span>
-                <a href={TOKENS.poorGoat.dexUrl} target="_blank" rel="noreferrer">
-                  Full chart <ExternalLink size={13} />
-                </a>
-              </div>
-              <iframe
-                title="$POORGOAT live Dexscreener chart"
-                src={DEX_EMBED_URL}
-                loading="lazy"
-                allow="clipboard-write"
-              />
-            </div>
-          </div>
-
-          <div className="contract-row">
-            <div>
-              <span>OFFICIAL CONTRACT</span>
-              <code>{TOKENS.poorGoat.mint}</code>
-            </div>
-            <button type="button" onClick={copyContract}>
-              {copiedContract ? <Check size={15} /> : <Copy size={15} />}
-              {copiedContract ? "Copied" : "Copy CA"}
-            </button>
-          </div>
-        </div>
-      </section>
-
       <section className="score-section page-width" id="goatscore">
         <div className="section-title-row score-title-row">
           <div>
@@ -667,8 +619,9 @@ export function PoorGoatLanding({
             </h2>
           </div>
           <p className="section-copy">
-            Enter your wallet and optional X name. We read public $ANSEM and
-            $POORGOAT activity, calculate a real score and create a branded card.
+            Enter your wallet and optional X name. GoatScore measures your
+            public $ANSEM conviction and how you retained or used any
+            $POORGOAT rewards received by the wallet.
           </p>
         </div>
 
@@ -744,11 +697,11 @@ export function PoorGoatLanding({
                 <div className="method-track">
                   <span style={{ width: "75%" }} />
                 </div>
-                <p>Holding time, retained position, buys, sells, transfers and major exits.</p>
+                <p>Primary score: holding time, accumulation, retained position, buys, sells, transfers and major exits.</p>
               </div>
               <div className="method-row">
                 <div>
-                  <span>$POORGOAT ACTIVITY</span>
+                  <span>$POORGOAT REWARD ACTIVITY</span>
                   <strong>25 PTS</strong>
                 </div>
                 <div className="method-track">
@@ -770,7 +723,7 @@ export function PoorGoatLanding({
                 <LoaderCircle size={32} className="spinner" />
                 <strong>READING PUBLIC WALLET HISTORY</strong>
                 <p>
-                  Classifying $ANSEM and $POORGOAT buys, sells, transfers and received tokens.
+                  Measuring $ANSEM conviction and how the wallet handled its $POORGOAT rewards.
                 </p>
               </div>
             ) : result ? (
@@ -828,7 +781,7 @@ export function PoorGoatLanding({
               <div className="share-card-toolbar">
                 <div>
                   <span>BRANDED SCORECARD</span>
-                  <p>One card. Both ecosystem scores. Ready for X.</p>
+                  <p>One card. $ANSEM conviction and $POORGOAT reward activity. Ready for X.</p>
                 </div>
                 <button type="button" onClick={() => setCardVariant((current) => current + 1)}>
                   <RefreshCw size={14} /> Change artwork
@@ -844,7 +797,7 @@ export function PoorGoatLanding({
                 <div className="final-card-grid" />
                 <div className="final-card-topline">
                   <span>POORGOAT.FUN</span>
-                  <span>ON-CHAIN CONVICTION RECEIPT</span>
+                  <span>$ANSEM HOLDER CONVICTION RECEIPT</span>
                 </div>
 
                 <div className="final-card-main">
@@ -891,7 +844,7 @@ export function PoorGoatLanding({
                   className="final-card-goat"
                   style={{ backgroundImage: `url(${poorGoatArtwork})` }}
                 >
-                  <span>ECOSYSTEM SIGNAL</span>
+                  <span>AIRDROP REWARD SIGNAL</span>
                   <strong>{result.poorGoat.score}/25</strong>
                 </div>
 
@@ -972,38 +925,93 @@ export function PoorGoatLanding({
         )}
       </section>
 
-      <section className="method-section page-width">
-        <div className="method-intro">
-          <p className="section-label">THE RULES ARE SIMPLE</p>
-          <h2>
-            CONVICTION
-            <br />
-            OVER WALLET SIZE.
-          </h2>
+      <section className="market-section page-width" id="market">
+        <div className="section-title-row terminal-v2-title-row">
+          <div>
+            <p className="section-label">LIVE MARKET INTELLIGENCE</p>
+            <h2>
+              THE POORGOAT
+              <br />
+              TERMINAL.
+            </h2>
+          </div>
+
+          <p className="section-copy">
+            A custom PoorGoat market dashboard with live pair statistics and an
+            area chart that begins collecting price points when this page opens.
+          </p>
         </div>
+
+        <PoorGoatMarketTerminal
+          market={market}
+          loading={marketLoading}
+          error={marketError}
+          copied={copiedContract}
+          onCopyContract={copyContract}
+        />
+      </section>
+
+            <section className="method-section page-width" id="flywheel">
+        <div className="method-intro">
+          <p className="section-label">HOW THE FLYWHEEL WORKS</p>
+          <h2>
+            HOLD $ANSEM.
+            <br />
+            BAGWORK.
+            <br />
+            RECEIVE $POORGOAT.
+          </h2>
+          <p className="flywheel-intro">
+            $POORGOAT is the reward layer for qualifying $ANSEM holders who
+            hold with conviction and actively help the ecosystem grow.
+          </p>
+        </div>
+
         <div className="method-grid">
           <article>
             <span>01</span>
-            <h3>READ</h3>
-            <p>Read public Solana activity for the two official token contracts.</p>
+            <h3>HOLD $ANSEM</h3>
+            <p>
+              Maintain genuine $ANSEM exposure instead of appearing only for
+              the reward.
+            </p>
           </article>
+
           <article>
             <span>02</span>
-            <h3>CLASSIFY</h3>
-            <p>Separate buys, sells, received tokens and wallet transfers.</p>
+            <h3>BAGWORK</h3>
+            <p>
+              Create, support, promote and contribute useful work to the
+              $ANSEM ecosystem.
+            </p>
           </article>
+
           <article>
             <span>03</span>
-            <h3>SCORE</h3>
-            <p>$ANSEM carries 75 points. $POORGOAT contributes the remaining 25.</p>
+            <h3>QUALIFY</h3>
+            <p>
+              PoorGoat identifies qualifying holders through the project&apos;s
+              airdrop process.
+            </p>
           </article>
+
           <article>
             <span>04</span>
-            <h3>SHARE</h3>
-            <p>Download the branded card, copy the result link and post it on X.</p>
+            <h3>RECEIVE $POORGOAT</h3>
+            <p>
+              Eligible $ANSEM holders receive $POORGOAT as the flywheel reward.
+            </p>
           </article>
         </div>
+
+        <p className="bagwork-note">
+          GoatScore verifies the public on-chain side of conviction. Off-chain
+          bagwork cannot be fully proven by wallet transactions alone and does
+          not guarantee an airdrop.
+        </p>
       </section>
+
+      <LivePoorGoatActivity market={market} />
 
       <section className="closing-section page-width">
         <div className="closing-art">
@@ -1016,11 +1024,13 @@ export function PoorGoatLanding({
           />
           <div className="closing-shade" />
           <div className="closing-copy">
-            <p>THE HERD REMEMBERS.</p>
+            <p>THE FLYWHEEL REWARDS CONTRIBUTORS.</p>
             <h2>
-              THE PEOPLE WHO HELD
+              HOLD $ANSEM.
               <br />
-              WILL HAVE THE RECEIPTS.
+              BAGWORK.
+              <br />
+              EARN $POORGOAT.
             </h2>
             <a className="solid-button" href="#goatscore">
               Check my wallet <Wallet size={17} />
@@ -1038,7 +1048,7 @@ export function PoorGoatLanding({
             height={58}
             className="footer-logo"
           />
-          <p>Track the goat. Prove your conviction.</p>
+          <p>The reward flywheel for $ANSEM holders who hold and bagwork.</p>
         </div>
         <div className="footer-links">
           <a href={TOKENS.ansem.dexUrl} target="_blank" rel="noreferrer">
